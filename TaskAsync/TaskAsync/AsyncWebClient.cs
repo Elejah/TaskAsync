@@ -9,19 +9,21 @@ namespace TaskAsync
     {
         public async Task<string> DownloadAsync(string url, CancellationToken ct)
         {
-            var client = new WebClient();
-            using (ct.Register(() => client.CancelAsync()))
+            using (var client = new WebClient())
             {
-                var data = await DownloadTaskAsync(client, url, ct);
-
-                return data;
+                using (ct.Register(() => client.CancelAsync()))
+                {
+                    var data = await DownloadTaskAsync(client, url, ct);
+                    Console.WriteLine("prere return");
+                    return data;
+                }
             }
         }
 
-        public Task<string> DownloadTaskAsync(WebClient client, string url, CancellationToken ct)
+        private Task<string> DownloadTaskAsync(WebClient client, string url, CancellationToken ct)
         {
             TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
-            client.DownloadStringCompleted += (ctk, e) =>
+            client.DownloadStringCompleted += (obj, e) =>
                 {
                     if (e.Cancelled)
                     {
@@ -34,6 +36,7 @@ namespace TaskAsync
                     else tcs.TrySetResult(e.Result);
                 };
             client.DownloadStringAsync(new Uri(url),ct);
+            Console.WriteLine("post download");
 
             return tcs.Task;
         }

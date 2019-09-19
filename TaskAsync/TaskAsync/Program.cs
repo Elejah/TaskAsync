@@ -4,30 +4,30 @@ using System.Threading.Tasks;
 
 namespace TaskAsync
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.WriteLine("отправлено на загрузку");
-            MainAsync();
+            MainAsync().GetAwaiter().GetResult();
             Console.WriteLine("end");
             Console.ReadLine();
         }
 
-        static void MainAsync()
+        static async Task MainAsync()
         {
             CancellationTokenSource cts = new CancellationTokenSource();
             CancellationToken token = cts.Token;
             AsyncWebClient Aclient = new AsyncWebClient();
             try
             {
-                var str1 = Aclient.DownloadAsync("http://ftp.byfly.by/test/100Mb.txt", token);
-                var str2 = Aclient.DownloadAsync("http://ftp.byfly.by/test/100Mb.txt", token);
-                var str3 = Aclient.DownloadAsync("http://ftp.byfly.by/test/100Mb.txt", token);
-                WaitCancelKey(cts);
-                Console.WriteLine(str1.Result);
-                Console.WriteLine(str2.Result);
-                Console.WriteLine(str3.Result);
+                var str1 =await Aclient.DownloadAsync("http://ftp.byfly.by/test/", token);
+                var str2 =await Aclient.DownloadAsync("http://ftp.byfly.by/test/", token);
+                var str3 =await Aclient.DownloadAsync("http://ftp.byfly.by/test/", token);
+                await WaitCancelKey(cts);
+                Console.WriteLine(str1);
+                Console.WriteLine(str2);
+                Console.WriteLine(str3);
             }
             catch (Exception ex)
             {
