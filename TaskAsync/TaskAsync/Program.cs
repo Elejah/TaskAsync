@@ -6,14 +6,13 @@ namespace TaskAsync
 {
     public class Program
     {
-        public static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("отправлено на загрузку");
-            MainAsync().GetAwaiter().GetResult();
+            await MainAsync();
             Console.WriteLine("end");
             Console.ReadLine();
         }
-
         static async Task MainAsync()
         {
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -21,13 +20,14 @@ namespace TaskAsync
             AsyncWebClient Aclient = new AsyncWebClient();
             try
             {
-                var str1 =await Aclient.DownloadAsync("http://ftp.byfly.by/test/", token);
-                var str2 =await Aclient.DownloadAsync("http://ftp.byfly.by/test/", token);
-                var str3 =await Aclient.DownloadAsync("http://ftp.byfly.by/test/", token);
-                await WaitCancelKey(cts);
-                Console.WriteLine(str1);
-                Console.WriteLine(str2);
-                Console.WriteLine(str3);
+                var str1 = Aclient.DownloadAsync("http://ftp.byfly.by/test/100Mb.txt", token);
+                var str2 = Aclient.DownloadAsync("http://ftp.byfly.by/test/100Mb.txt", token);
+                var str3 = Aclient.DownloadAsync("http://ftp.byfly.by/test/100Mb.txt", token);
+                WaitCancelKey(cts);
+
+                Console.WriteLine(str1.GetAwaiter().GetResult());
+                Console.WriteLine(str2.GetAwaiter().GetResult());
+                Console.WriteLine(str3.GetAwaiter().GetResult());
             }
             catch (Exception ex)
             {
@@ -43,7 +43,7 @@ namespace TaskAsync
             {
                 do
                 {
-                    var key = Console.ReadKey(true);
+                    var key = Console.ReadKey();
                     if (key.KeyChar == 'b')
                     {
                         flag = false;

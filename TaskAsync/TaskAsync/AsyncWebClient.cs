@@ -35,7 +35,7 @@ namespace TaskAsync
                     }
                     else tcs.TrySetResult(e.Result);
                 };
-            client.DownloadStringAsync(new Uri(url),ct);
+            client.DownloadStringAsync(new Uri(url));
             Console.WriteLine("post download");
 
             return tcs.Task;
