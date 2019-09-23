@@ -25,9 +25,9 @@ namespace TaskAsync
                 var str3 = Aclient.DownloadAsync("http://ftp.byfly.by/test/100Mb.txt", token);
                 WaitCancelKey(cts);
 
-                Console.WriteLine(str1.GetAwaiter().GetResult());
-                Console.WriteLine(str2.GetAwaiter().GetResult());
-                Console.WriteLine(str3.GetAwaiter().GetResult());
+                Console.WriteLine(await str1);
+                Console.WriteLine(await str2);
+                Console.WriteLine(await str3);
             }
             catch (Exception ex)
             {
@@ -35,7 +35,7 @@ namespace TaskAsync
             }
         }
 
-        private static async Task WaitCancelKey(CancellationTokenSource cts)
+        private static void WaitCancelKey(CancellationTokenSource cts)
         {
             Console.WriteLine("Press b to stop");
             bool flag = true;
@@ -51,7 +51,7 @@ namespace TaskAsync
                     }
                 } while (flag);
             };
-            await Task.Run(work);
+            Task.Run(work);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace TaskAsync
                 using (ct.Register(() => client.CancelAsync()))
                 {
                     var data = await DownloadTaskAsync(client, url, ct);
-                    Console.WriteLine("prere return");
+
                     return data;
                 }
             }
@@ -36,7 +36,6 @@ namespace TaskAsync
                     else tcs.TrySetResult(e.Result);
                 };
             client.DownloadStringAsync(new Uri(url));
-            Console.WriteLine("post download");
 
             return tcs.Task;
         }
