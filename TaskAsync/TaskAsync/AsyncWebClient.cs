@@ -24,17 +24,17 @@ namespace TaskAsync
         {
             TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
             client.DownloadStringCompleted += (obj, e) =>
+            {
+                if (e.Cancelled)
                 {
-                    if (e.Cancelled)
-                    {
-                        tcs.SetCanceled();
-                    }
-                    if (e.Error != null)
-                    {
-                        tcs.TrySetException(e.Error);
-                    }
-                    else tcs.SetResult(e.Result);
-                };
+                    tcs.SetCanceled();
+                }
+                if (e.Error != null)
+                {
+                    tcs.TrySetException(e.Error);
+                }
+                else tcs.SetResult(e.Result);
+            };
             client.DownloadStringAsync(new Uri(url));
 
             return tcs.Task;
