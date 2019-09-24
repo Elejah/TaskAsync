@@ -27,13 +27,13 @@ namespace TaskAsync
                 {
                     if (e.Cancelled)
                     {
-                        tcs.TrySetCanceled();
+                        tcs.SetCanceled();
                     }
                     if (e.Error != null)
                     {
                         tcs.TrySetException(e.Error);
                     }
-                    else tcs.TrySetResult(e.Result);
+                    else tcs.SetResult(e.Result);
                 };
             client.DownloadStringAsync(new Uri(url));
 
